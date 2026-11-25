@@ -5,234 +5,172 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Our Honeymoon</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
-
   :root {
-    --char: #120c09;
-    --smoke: #2a1a13;
-    --cream: #f4e6cf;
-    --muted: #b9a58a;
-    --ember: #e8642c;
-    --amber: #f2a33a;
-    --gold: #d9a441;
-    --rust: #8f3b1b;
+    --bg: #fbf8f3;
+    --card: #ffffff;
+    --ink: #2b231d;
+    --muted: #8c7d6d;
+    --line: #ece4d8;
+    --accent: #b8562a;
+    --ochre: #d9a04a;
+    --soft: #f5ebe0;
   }
 
   * { box-sizing: border-box; }
 
   body {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 18px;
-    color: var(--cream);
     margin: 0;
-    padding: 40px 24px 64px;
-    min-height: 100vh;
-    background:
-      radial-gradient(ellipse at 50% 110%, rgba(232,100,44,.55) 0%, rgba(143,59,27,.25) 35%, transparent 65%),
-      linear-gradient(180deg, #0a0605 0%, var(--char) 45%, var(--smoke) 100%);
-    background-attachment: fixed;
-    overflow-x: hidden;
-  }
-
-  /* Drifting embers */
-  body::before, body::after {
-    content: "";
-    position: fixed;
-    left: 0; right: 0; bottom: -10%;
-    height: 60vh;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 20% 80%, rgba(242,163,58,.7) 0 1px, transparent 2px),
-      radial-gradient(circle at 60% 70%, rgba(232,100,44,.8) 0 1.5px, transparent 2.5px),
-      radial-gradient(circle at 80% 90%, rgba(242,163,58,.6) 0 1px, transparent 2px),
-      radial-gradient(circle at 40% 85%, rgba(232,100,44,.7) 0 1px, transparent 2px);
-    animation: rise 9s linear infinite;
-    opacity: .7;
-  }
-  body::after { animation-duration: 13s; animation-delay: -5s; opacity: .45; }
-
-  @keyframes rise {
-    0%   { transform: translateY(0); opacity: 0; }
-    15%  { opacity: .8; }
-    100% { transform: translateY(-60vh); opacity: 0; }
-  }
-
-  h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    text-align: center;
-    font-weight: 400;
-    font-size: 44px;
-    letter-spacing: 8px;
-    margin: 0 0 12px;
-    background: linear-gradient(180deg, #fff1d6 0%, var(--amber) 55%, var(--ember) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 18px rgba(232,100,44,.45));
-    animation: flicker 4s ease-in-out infinite;
-  }
-
-  @keyframes flicker {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(232,100,44,.45)); }
-    50%      { filter: drop-shadow(0 0 26px rgba(242,163,58,.6)); }
-  }
-
-  .intro {
-    text-align: center;
-    max-width: 580px;
-    margin: 0 auto 32px;
+    padding: 0 24px 120px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
     line-height: 1.6;
-    color: var(--muted);
-    font-style: italic;
+    -webkit-font-smoothing: antialiased;
   }
 
-  .panel {
-    max-width: 640px;
+  .wrap { max-width: 1040px; margin: 0 auto; }
+
+  /* Header */
+  header { text-align: center; padding: 120px 0 72px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  h1 {
+    margin: 0 0 20px;
+    font-weight: 300;
+    font-size: 52px;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .intro {
     margin: 0 auto;
-    text-align: center;
-    padding: 28px;
-    border-radius: 18px;
-    background: rgba(18,12,9,.6);
-    border: 1px solid rgba(242,163,58,.25);
-    box-shadow: 0 0 40px rgba(232,100,44,.12), inset 0 0 30px rgba(0,0,0,.4);
-    backdrop-filter: blur(6px);
+    max-width: 520px;
+    color: var(--muted);
+    font-weight: 300;
+    font-size: 18px;
   }
 
-  label { color: var(--muted); letter-spacing: 1px; }
-
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  label { color: var(--muted); font-size: 15px; }
   input {
-    font-family: inherit;
-    font-size: 22px;
-    padding: 10px 14px;
-    width: 150px;
+    font: inherit;
+    font-size: 20px;
+    width: 120px;
+    padding: 6px 4px;
     text-align: center;
-    color: var(--amber);
-    background: rgba(0,0,0,.35);
-    border: 1px solid rgba(242,163,58,.35);
-    border-radius: 10px;
-    outline: none;
-    transition: box-shadow .3s, border-color .3s;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    transition: border-color .3s;
   }
-  input:focus { border-color: var(--amber); box-shadow: 0 0 18px rgba(242,163,58,.35); }
+  input:focus { outline: none; border-bottom-color: var(--accent); }
 
   button {
-    font-family: inherit;
-    font-size: 17px;
-    letter-spacing: 1px;
-    padding: 11px 22px;
-    margin: 6px 4px;
-    color: #1a0f08;
-    background: linear-gradient(135deg, var(--amber), var(--ember));
-    border: 0;
+    font: inherit;
+    font-size: 15px;
+    padding: 12px 24px;
     border-radius: 999px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(232,100,44,.35);
-    transition: transform .2s, box-shadow .2s, filter .2s;
+    transition: background .2s, color .2s, transform .2s;
   }
-  button:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(242,163,58,.5); filter: brightness(1.05); }
-  button:active { transform: translateY(0); }
-  button.secondary {
-    background: transparent;
-    color: var(--amber);
-    border: 1px solid rgba(242,163,58,.6);
-    box-shadow: none;
-  }
-  button.secondary:hover { background: rgba(242,163,58,.1); box-shadow: 0 0 18px rgba(242,163,58,.25); }
+  button:hover { transform: translateY(-1px); }
+  button.secondary { background: transparent; color: var(--accent); }
+  button.secondary:hover { background: var(--soft); }
 
+  /* Summary */
+  .summary { text-align: center; margin: 48px 0 0; }
   .total {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 26px;
-    color: var(--amber);
-    margin: 18px 0 6px;
-    text-shadow: 0 0 14px rgba(242,163,58,.35);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--ink);
   }
-  .msg { min-height: 1.3em; color: #ff9a6b; font-style: italic; }
+  .total span { color: var(--accent); }
+  .msg { min-height: 1.6em; color: var(--accent); font-size: 15px; margin: 8px 0 20px; }
 
+  /* Suggested cards */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 18px;
-    max-width: 960px;
-    margin: 32px auto;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 28px;
+    margin-top: 40px;
   }
-
   .card {
-    position: relative;
-    background: linear-gradient(160deg, rgba(58,32,20,.85), rgba(22,14,10,.9));
-    border: 1px solid rgba(242,163,58,.22);
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.45);
-    transition: transform .25s, border-color .25s, box-shadow .25s;
-    animation: rise-in .6s ease both;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 12px 36px rgba(90, 60, 30, .06);
   }
-  .card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(242,163,58,.6);
-    box-shadow: 0 14px 34px rgba(0,0,0,.55), 0 0 24px rgba(232,100,44,.25);
-  }
-  @keyframes rise-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  .card img { width: 100%; border-radius: 12px; margin-bottom: 18px; }
+  .card strong { display: block; font-weight: 500; font-size: 16px; line-height: 1.4; }
+  .card .price { display: block; color: var(--accent); font-size: 22px; font-weight: 300; margin-top: 10px; }
+  .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 13px; }
 
-  .card img { width: 100%; border-radius: 10px; margin-bottom: 12px; }
-  .card strong { font-weight: 700; font-size: 17px; line-height: 1.3; display: block; color: var(--cream); }
-  .card .price { color: var(--amber); font-size: 22px; margin-top: 8px; text-shadow: 0 0 10px rgba(242,163,58,.3); }
-  .card small { display: block; color: var(--muted); margin-top: 6px; letter-spacing: .5px; }
-
-  .progress-list { max-width: 960px; margin: 48px auto; }
+  /* Progress */
+  .progress { margin-top: 120px; }
+  .cat { margin-top: 64px; }
+  .cat:first-child { margin-top: 0; }
   .cat h3 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
-    font-size: 16px;
-    letter-spacing: 4px;
+    margin: 0 0 12px;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--amber);
-    margin: 36px 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid transparent;
-    border-image: linear-gradient(90deg, var(--ember), transparent) 1;
+    color: var(--muted);
   }
-
-  .progress-list .card { animation: none; padding: 14px 18px; }
-  .progress-list .card strong { display: inline; font-size: 16px; }
-  .progress-list .card .price { display: inline; font-size: 16px; margin: 0; }
-  .progress-list .card small { display: inline; margin-left: 8px; }
-
-  .bar {
-    height: 6px;
-    background: rgba(0,0,0,.45);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-top: 10px;
-    box-shadow: inset 0 0 4px rgba(0,0,0,.6);
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px 24px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
   }
-  .bar span {
-    display: block;
-    height: 100%;
-    background: linear-gradient(90deg, var(--rust), var(--ember), var(--amber));
-    border-radius: 999px;
-    box-shadow: 0 0 10px rgba(242,163,58,.6);
-    transition: width .6s ease;
-  }
+  .row strong { font-weight: 400; font-size: 16px; }
+  .row .price { color: var(--accent); font-weight: 300; font-size: 18px; }
+  .row small { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
+  .bar { grid-column: 1 / -1; height: 3px; background: var(--soft); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--ochre), var(--accent)); border-radius: 3px; transition: width .5s ease; }
 
-  @media (prefers-reduced-motion: reduce) {
-    *, body::before, body::after { animation: none !important; transition: none !important; }
+  @media (max-width: 600px) {
+    h1 { font-size: 38px; }
+    header { padding: 72px 0 48px; }
   }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<h1>OUR HONEYMOON</h1>
-<p class="intro">Help us make our trip to Japan unforgettable. Enter the amount you'd like to give, and we'll suggest a set of experiences to fund. Shuffle for a different set.</p>
+<header>
+  <div class="eyebrow">Autumn · Japan</div>
+  <h1>Our Honeymoon</h1>
+  <p class="intro">Help us make our trip unforgettable. Choose an amount to give and we'll suggest experiences to fund. Shuffle for a different set.</p>
+</header>
 
-<div class="panel">
+<div class="controls">
   <label>Your contribution £ <input id="amount" type="number" min="10" step="1" value="250"></label>
-  <div>
-    <button id="suggest">Suggest experiences</button>
-    <button class="secondary" id="shuffle">Shuffle</button>
-  </div>
+  <button id="suggest">Suggest experiences</button>
+  <button class="secondary" id="shuffle">Shuffle</button>
+</div>
+
+<div class="summary">
   <div class="total" id="total"></div>
   <div class="msg" id="msg"></div>
   <button id="pay">Pay</button>
@@ -240,7 +178,9 @@
 
 <div class="grid" id="picks"></div>
 
-<div class="progress-list" id="categories"></div>
+<section class="progress" id="categories"></section>
+
+</div>
 
 <script>
 // ---- Experiences (one entry per gift type) ----
@@ -345,7 +285,7 @@ function render() {
     }
     const title = document.createElement("strong");
     title.textContent = e.name + (us.length > 1 ? " ×" + us.length : "");
-    const price = document.createElement("div");
+    const price = document.createElement("span");
     price.className = "price";
     price.textContent = money(us.length * e.price);
     const cat = document.createElement("small");
@@ -353,7 +293,12 @@ function render() {
     card.append(title, price, cat);
     grid.appendChild(card);
   }
-  $("total").textContent = "Your total: " + money(current.sum);
+  const totalEl = $("total");
+  totalEl.textContent = "";
+  const label = document.createTextNode("Your total ");
+  const amount = document.createElement("span");
+  amount.textContent = money(current.sum);
+  totalEl.append(label, amount);
 }
 
 function renderProgress() {
@@ -371,13 +316,12 @@ function renderProgress() {
       const done = units.filter(u => u.exp === i && funded.has(u.id)).length;
       const pct = Math.round(done / e.qty * 100);
       const row = document.createElement("div");
-      row.className = "card";
-      row.style.margin = "8px 0";
+      row.className = "row";
       const name = document.createElement("strong");
       name.textContent = e.name;
       const price = document.createElement("span");
       price.className = "price";
-      price.textContent = " " + money(e.price);
+      price.textContent = money(e.price);
       const left = document.createElement("small");
       left.textContent = (e.qty - done) + " of " + e.qty + " left";
       const bar = document.createElement("div");
