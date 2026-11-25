@@ -116,6 +116,19 @@
   }
   input:focus { outline: none; }
 
+  .message-field { margin-bottom: 22px; }
+  .message-field textarea {
+    font-family: var(--sans);
+    font-size: 15px;
+    width: 100%;
+    resize: vertical;
+    padding: 10px 12px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .message-field textarea:focus { outline: none; border-color: var(--ember); }
   .actions { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
   button {
     font-family: var(--sans);
@@ -282,6 +295,9 @@
       <div class="amount-field">
         <span class="pound">&pound;</span>
         <input id="amount" type="number" min="10" step="1" value="250" aria-label="Contribution amount">
+      </div>
+      <div class="message-field">
+        <textarea id="message" rows="2" maxlength="300" placeholder="Leave a message for us (optional)" aria-label="Optional message"></textarea>
       </div>
       <div class="actions">
         <button id="suggest">Suggest experiences</button>
@@ -575,7 +591,7 @@ $("pay").onclick = async () => {
     const res = await fetch(CHECKOUT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ name, allocation, total: current.sum })
+      body: JSON.stringify({ name, message: $("message").value.trim(), allocation, total: current.sum })
     });
     const data = await res.json();
     if (data.url) window.location = data.url;
