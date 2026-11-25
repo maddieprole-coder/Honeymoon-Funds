@@ -84,7 +84,7 @@
     color: var(--muted);
     margin: 0 0 14px;
   }
-  .name-field { margin-bottom: 10px; }
+  .name-field { margin-bottom: 22px; }
   .name-field input {
     font-family: var(--sans);
     font-size: 16px;
@@ -288,13 +288,13 @@
   <div class="split">
 
     <aside class="panel">
-      <div class="name-field">
-        <input id="name" type="text" placeholder="Your name" maxlength="60" aria-label="Your name" autocomplete="name">
-      </div>
       <p class="question">How much would you like to give?</p>
       <div class="amount-field">
         <span class="pound">&pound;</span>
         <input id="amount" type="number" min="10" step="1" value="250" aria-label="Contribution amount">
+      </div>
+      <div class="name-field">
+        <input id="name" type="text" placeholder="Your name" maxlength="60" aria-label="Your name" autocomplete="name">
       </div>
       <div class="message-field">
         <textarea id="message" rows="2" maxlength="300" placeholder="Leave a message for us (optional)" aria-label="Optional message"></textarea>
