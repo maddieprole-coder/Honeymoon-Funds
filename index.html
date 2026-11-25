@@ -258,9 +258,9 @@
 <body>
 
 <header class="hero">
-  <div class="eyebrow">Japan &middot; Autumn</div>
+  <div class="eyebrow">Autumn in Japan</div>
   <h1>Our <em>Honeymoon</em></h1>
-  <p class="intro">Help us make the trip unforgettable. Choose an amount and we'll suggest experiences to fund, with a shuffle for a different set.</p>
+  <p class="intro">We've dreamed of Japan for years: quiet temples, hot springs, bullet trains, and a bit too much arcade time. Pop in an amount, and we'll suggest a few experiences you can help us make happen. Not quite right? Hit shuffle for a different set.</p>
 </header>
 
 <div class="wrap">
@@ -343,13 +343,34 @@ const CHECKOUT_ENDPOINT = "";      // Apps Script web app URL, added when the ba
 // ---- Photos (Unsplash) ----
 // One search term per experience, in the same order as EXPERIENCES above.
 const PHOTO_TERMS = [
-  "tropical resort villa", "Okinawa beach snorkelling", "Japanese onsen ryokan", "Osaka skyline night",
-  "Tokyo hotel room", "Tokyo skyline night", "Kyoto ryokan", "Hiroshima city",
-  "business class airplane seat", "airplane window clouds", "airplane wing sunset", "Shinkansen bullet train",
-  "Shinkansen train Japan", "Hakone mountains Japan", "Japan train station", "theme park rollercoaster",
-  "go-karts track", "theme park fireworks night", "theme park castle", "amusement park rides",
-  "kaiseki Japanese dinner", "Japanese arcade games", "digital art light installation", "Japanese cafe dessert",
-  "Miyajima torii gate", "Japanese museum exhibition", "Shibuya crossing night", "karaoke bowling arcade"
+  "luxury resort villa beach sunset",                 // Club Med night
+  "Okinawa turquoise sea snorkelling",                // Club Med beach and snorkelling
+  "private onsen bath Japanese ryokan room",          // Hakone onsen room
+  "Osaka skyline night aerial view",                  // Osaka high above
+  "Tokyo hotel room city view",                       // Tokyo night
+  "Tokyo skyline night view from hotel window",       // Tokyo with a view
+  "Kyoto traditional ryokan room tatami",             // Kyoto night
+  "Hiroshima city night skyline",                     // Hiroshima night
+  "British Airways business class cabin lie flat seat aesthetic",  // Business class seats
+  "British Airways airplane wing clouds sunrise aesthetic",        // Half a flight to Okinawa
+  "British Airways airplane wing over clouds sunset aesthetic",    // Half a flight back to Tokyo
+  "Shinkansen bullet train platform Japan",           // Bullet train to Kyoto
+  "Shinkansen bullet train Mount Fuji",               // Bullet train to Hiroshima
+  "Hakone Japan mountain train",                      // Hakone travel pass
+  "Narita airport express train Japan",               // Airport trains
+  "theme park ride queue fast pass",                  // Express pass
+  "outdoor go-kart racing track",                     // Go-karts
+  "theme park castle fireworks night",                // Tokyo Disneyland
+  "theme park waterfront night lights",               // DisneySea
+  "theme park rollercoaster night",                   // Universal Studios
+  "kaiseki multi-course Japanese dinner seasonal",    // Kaiseki dinner
+  "indoor family play park Japan",                    // PokéPark
+  "immersive digital art light installation room",    // teamLab Planets
+  "Japanese cafe lunch plate",                        // Pokémon Cafe
+  "Itsukushima shrine torii gate water",              // Miyajima
+  "interactive museum exhibition Japan",              // Nintendo Museum
+  "Shibuya Sky rooftop sunset view Tokyo",            // Shibuya Sky
+  "karaoke bowling arcade night Japan"                // Round1
 ];
 const UNSPLASH_KEY = "XebReS10eQGD3bS3YcMIjfsQKmFyXQ1ieeJlBEhlQ_c";
 let photoCache = {};
