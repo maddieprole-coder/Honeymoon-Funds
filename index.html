@@ -4,181 +4,278 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Our Honeymoon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f4e9d6;
-    --card: #fbf4e6;
-    --ink: #3a2c20;
-    --muted: #8a7559;
-    --line: #e6d7bd;
-    --accent: #b3522a;
-    --ochre: #d59a3e;
-    --soft: #ecdcc2;
+    --cream: #f6eddc;
+    --paper: #fbf6ea;
+    --ink: #3b2b1f;
+    --muted: #8b7760;
+    --line: #e4d6bb;
+    --ember: #a94a24;
+    --ember-deep: #7d3218;
+    --gold: #c98a3a;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    padding: 0 24px 120px;
-    background: var(--bg);
+    background: var(--cream);
     color: var(--ink);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
+    font-weight: 300;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 1040px; margin: 0 auto; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
 
-  /* Header */
-  header { text-align: center; padding: 120px 0 72px; }
-  .eyebrow {
-    display: inline-block;
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-  h1 {
-    margin: 0 0 20px;
-    font-weight: 300;
-    font-size: 52px;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-  }
-  .intro {
-    margin: 0 auto;
-    max-width: 520px;
-    color: var(--muted);
-    font-weight: 300;
-    font-size: 18px;
-  }
-
-  /* Controls */
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-  }
-  label { color: var(--muted); font-size: 15px; }
-  input {
-    font: inherit;
-    font-size: 20px;
-    width: 120px;
-    padding: 6px 4px;
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 85% 0%, rgba(201,138,58,.55) 0%, transparent 55%),
+      linear-gradient(160deg, var(--ember-deep) 0%, var(--ember) 55%, #6b2a14 100%);
+    color: #fbf1df;
     text-align: center;
-    color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    border-radius: 0;
-    transition: border-color .3s;
+    padding: 130px 28px 150px;
   }
-  input:focus { outline: none; border-bottom-color: var(--accent); }
+  .hero::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: -1px;
+    width: 1px; height: 80px;
+    background: linear-gradient(to bottom, rgba(251,241,223,.7), transparent);
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: .85;
+    margin-bottom: 26px;
+    font-weight: 400;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(48px, 8vw, 84px);
+    line-height: 1.02;
+    margin: 0 0 26px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 em { font-style: italic; color: #f4c27a; }
+  .hero .intro {
+    max-width: 520px;
+    margin: 0 auto;
+    font-size: 18px;
+    opacity: .9;
+  }
 
+  /* Contribution panel, lifted over the hero */
+  .panel-wrap { margin-top: -90px; position: relative; z-index: 1; }
+  .panel {
+    background: var(--paper);
+    border-radius: 22px;
+    padding: 40px 36px;
+    box-shadow: 0 30px 60px -20px rgba(60,30,10,.35), 0 0 0 1px rgba(201,138,58,.15);
+    text-align: center;
+  }
+  .panel .question {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .amount-field {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--line);
+    padding: 0 6px 6px;
+    margin-bottom: 26px;
+  }
+  .amount-field .pound { font-family: var(--serif); font-size: 36px; color: var(--muted); }
+  input {
+    font-family: var(--serif);
+    font-size: 56px;
+    width: 180px;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    text-align: center;
+    padding: 0;
+  }
+  input:focus { outline: none; }
+  .amount-field:focus-within { border-bottom-color: var(--ember); }
+
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
   button {
-    font: inherit;
-    font-size: 15px;
-    padding: 12px 24px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 15px 28px;
     border-radius: 999px;
-    border: 1px solid var(--accent);
-    background: var(--accent);
+    border: 1px solid var(--ember);
+    background: var(--ember);
     color: #fff;
     cursor: pointer;
-    transition: background .2s, color .2s, transform .2s;
+    transition: background .25s, color .25s, border-color .25s, transform .25s;
   }
-  button:hover { transform: translateY(-1px); }
-  button.secondary { background: transparent; color: var(--accent); }
-  button.secondary:hover { background: var(--soft); }
+  button:hover { background: var(--ember-deep); border-color: var(--ember-deep); transform: translateY(-1px); }
+  button.ghost { background: transparent; color: var(--ember); }
+  button.ghost:hover { background: var(--ember); color: #fff; }
 
-  /* Summary */
-  .summary { text-align: center; margin: 48px 0 0; }
+  .summary { text-align: center; margin: 44px 0 0; }
   .total {
-    font-size: 28px;
-    font-weight: 300;
+    font-family: var(--serif);
+    font-size: 30px;
     color: var(--ink);
   }
-  .total span { color: var(--accent); }
-  .msg { min-height: 1.6em; color: var(--accent); font-size: 15px; margin: 8px 0 20px; }
+  .total span { color: var(--ember); font-style: italic; }
+  .msg { min-height: 1.6em; color: var(--ember); font-size: 15px; margin: 8px 0 14px; }
+  .pay-btn { min-width: 220px; }
+
+  /* Section headings */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 110px 0 36px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 34px;
+    margin: 0;
+  }
+  .section-head p { margin: 0; color: var(--muted); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
 
   /* Suggested cards */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 28px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
   }
   .card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 12px 36px rgba(110, 75, 35, .10);
+    background: var(--paper);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px -18px rgba(70,40,15,.35);
+    transition: transform .3s, box-shadow .3s;
+    animation: fade-up .6s ease both;
   }
-  .card img { width: 100%; border-radius: 12px; margin-bottom: 18px; }
-  .card strong { display: block; font-weight: 500; font-size: 16px; line-height: 1.4; }
-  .card .price { display: block; color: var(--accent); font-size: 22px; font-weight: 300; margin-top: 10px; }
-  .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 13px; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -18px rgba(70,40,15,.45); }
+  .thumb {
+    height: 150px;
+    background: linear-gradient(150deg, #e9c899 0%, #c98a3a 45%, #a94a24 100%);
+  }
+  .card img { width: 100%; height: 150px; object-fit: cover; display: block; }
+  .card .body { padding: 20px 22px 22px; }
+  .card strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 19px; line-height: 1.35; }
+  .card .price { display: block; font-family: var(--serif); font-style: italic; color: var(--ember); font-size: 26px; margin-top: 10px; }
+  .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-  /* Progress */
-  .progress { margin-top: 120px; }
-  .cat { margin-top: 64px; }
-  .cat:first-child { margin-top: 0; }
+  /* Progress list */
+  .cat { margin-top: 56px; }
   .cat h3 {
-    margin: 0 0 12px;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 12px;
     letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--gold);
+    margin: 0 0 6px;
   }
   .row {
     display: grid;
     grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 6px 24px;
-    padding: 22px 0;
-    border-top: 1px solid var(--line);
+    align-items: baseline;
+    gap: 4px 28px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
   }
-  .row strong { font-weight: 400; font-size: 16px; }
-  .row .price { color: var(--accent); font-weight: 300; font-size: 18px; }
-  .row small { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
-  .bar { grid-column: 1 / -1; height: 3px; background: var(--soft); border-radius: 3px; overflow: hidden; margin-top: 4px; }
-  .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--ochre), var(--accent)); border-radius: 3px; transition: width .5s ease; }
+  .row strong { font-family: var(--serif); font-weight: 400; font-size: 19px; }
+  .row .price { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ember); }
+  .row small { grid-column: 1 / -1; color: var(--muted); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .bar { grid-column: 1 / -1; height: 2px; background: var(--line); margin-top: 8px; }
+  .bar span { display: block; height: 100%; background: var(--ember); transition: width .6s ease; }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    padding: 110px 0 60px;
+  }
 
   @media (max-width: 600px) {
-    h1 { font-size: 38px; }
-    header { padding: 72px 0 48px; }
+    .hero { padding: 90px 22px 120px; }
+    .panel { padding: 30px 22px; }
+    input { font-size: 46px; width: 150px; }
+    .section-head { flex-direction: column; align-items: flex-start; }
   }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<header>
-  <div class="eyebrow">Autumn · Japan</div>
-  <h1>Our Honeymoon</h1>
-  <p class="intro">Help us make our trip unforgettable. Choose an amount to give and we'll suggest experiences to fund. Shuffle for a different set.</p>
+<header class="hero">
+  <div class="eyebrow">Japan &middot; Autumn</div>
+  <h1>Our <em>Honeymoon</em></h1>
+  <p class="intro">Help us make the trip unforgettable. Choose an amount and we'll suggest experiences to fund, with a shuffle for a different set.</p>
 </header>
 
-<div class="controls">
-  <label>Your contribution £ <input id="amount" type="number" min="10" step="1" value="250"></label>
-  <button id="suggest">Suggest experiences</button>
-  <button class="secondary" id="shuffle">Shuffle</button>
-</div>
+<div class="wrap">
 
-<div class="summary">
-  <div class="total" id="total"></div>
-  <div class="msg" id="msg"></div>
-  <button id="pay">Pay</button>
-</div>
+  <div class="panel-wrap">
+    <div class="panel">
+      <p class="question">How much would you like to give?</p>
+      <div class="amount-field">
+        <span class="pound">&pound;</span>
+        <input id="amount" type="number" min="10" step="1" value="250" aria-label="Contribution amount">
+      </div>
+      <div class="actions">
+        <button id="suggest">Suggest experiences</button>
+        <button class="ghost" id="shuffle">Shuffle</button>
+      </div>
+      <div class="summary">
+        <div class="total" id="total"></div>
+        <div class="msg" id="msg"></div>
+        <button class="pay-btn" id="pay">Pay</button>
+      </div>
+    </div>
+  </div>
 
-<div class="grid" id="picks"></div>
+  <div class="section-head" id="picks-head" style="display:none">
+    <h2>Your selection</h2>
+    <p>Funded by you</p>
+  </div>
+  <div class="grid" id="picks"></div>
 
-<section class="progress" id="categories"></section>
+  <div class="section-head">
+    <h2>Every experience</h2>
+    <p>Progress so far</p>
+  </div>
+  <section id="categories"></section>
+
+  <footer>With love, from us both.</footer>
 
 </div>
 
@@ -266,6 +363,7 @@ let current = null;
 function render() {
   const grid = $("picks");
   grid.innerHTML = "";
+  $("picks-head").style.display = current ? "flex" : "none";
   if (!current) { $("total").textContent = ""; return; }
 
   const groups = new Map();
@@ -273,16 +371,24 @@ function render() {
     if (!groups.has(u.exp)) groups.set(u.exp, []);
     groups.get(u.exp).push(u);
   }
+  let delay = 0;
   for (const [exp, us] of groups) {
     const e = EXPERIENCES[exp];
     const card = document.createElement("div");
     card.className = "card";
+    card.style.animationDelay = (delay++ * 60) + "ms";
     if (e.image) {
       const img = document.createElement("img");
       img.src = e.image;
       img.alt = e.name;
       card.appendChild(img);
+    } else {
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+      card.appendChild(thumb);
     }
+    const body = document.createElement("div");
+    body.className = "body";
     const title = document.createElement("strong");
     title.textContent = e.name + (us.length > 1 ? " ×" + us.length : "");
     const price = document.createElement("span");
@@ -290,7 +396,8 @@ function render() {
     price.textContent = money(us.length * e.price);
     const cat = document.createElement("small");
     cat.textContent = e.category;
-    card.append(title, price, cat);
+    body.append(title, price, cat);
+    card.appendChild(body);
     grid.appendChild(card);
   }
   const totalEl = $("total");
