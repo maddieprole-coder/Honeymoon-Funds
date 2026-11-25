@@ -388,10 +388,23 @@ const EXPERIENCES = [
 ];
 
 // ---- Settings ----
-const CHECKOUT_ENDPOINT = "";      // Apps Script web app URL, added when the backend is ready
+// Paste the Apps Script web app URL (ending in /exec) between the quotes.
+const CHECKOUT_ENDPOINT = "https://script.google.com/macros/s/AKfycbxJApu6vpn5KDox0QvngqmKdQHM3H01O5lmvf8NfIk9ag6GQ6zemhLqRJSTM95kz2wY/exec";
 // Money already given towards each experience, keyed by its index in EXPERIENCES (£).
-// Filled in from the sheet once the backend is connected.
+// Loaded live from the sheet when the page opens.
 const FUNDED = {};
+
+async function loadProgress() {
+  if (!CHECKOUT_ENDPOINT) return;
+  try {
+    const res = await fetch(CHECKOUT_ENDPOINT + "?action=progress");
+    const data = await res.json();
+    Object.assign(FUNDED, data.funded || {});
+    renderProgress();
+  } catch (err) {
+    // If progress can't load, the page still works; it just shows nothing funded yet.
+  }
+}
 
 const $ = id => document.getElementById(id);
 const money = n => "£" + n.toLocaleString("en-GB");
@@ -603,6 +616,7 @@ $("pay").onclick = async () => {
 
 renderProgress();
 render();
+loadProgress();
 </script>
 </body>
 </html>
