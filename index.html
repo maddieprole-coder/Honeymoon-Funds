@@ -384,6 +384,15 @@ function remainingFor(i) {
   return EXPERIENCES[i].price * EXPERIENCES[i].qty - (FUNDED[i] || 0);
 }
 
+// Orders experiences so the most expensive come first. A small random bump keeps
+// the order from being identical every time, so Shuffle still gives different sets.
+function byPriority(indexes) {
+  return indexes
+    .map(i => ({ i, score: EXPERIENCES[i].price + Math.random() * 150 }))
+    .sort((a, b) => b.score - a.score)
+    .map(x => x.i);
+}
+
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -395,7 +404,8 @@ function shuffle(arr) {
 // Splits the guest's amount across experiences. Whole gifts are taken first, and whatever
 // is left over becomes a part-contribution to another gift, so the full amount is always used.
 // Returns { alloc: Map(expIndex -> £), sum, key }. excludeKey stops Shuffle repeating a set.
-function buildSet(target, excludeKey) {
+// For amounts of £100 or more, each suggestion spreads across different gifts where it can.
+function buildSet(target, excludeKey, spreadOut = target >= 100) {
   const indexes = EXPERIENCES.map((_, i) => i).filter(i => remainingFor(i) > 0);
   const totalLeft = indexes.reduce((s, i) => s + remainingFor(i), 0);
   const goal = Math.min(target, totalLeft);
@@ -408,17 +418,20 @@ function buildSet(target, excludeKey) {
     const alloc = new Map();
     let money = goal;
 
-    // Whole gifts first, in random order
-    for (const i of shuffle([...indexes])) {
+    // Whole gifts first, most expensive first (with a little randomness so Shuffle varies)
+    for (const i of byPriority(indexes)) {
       const p = EXPERIENCES[i].price;
-      while (money >= p && left[i] >= p) {
+      while (money >= p && left[i] >= p && !(spreadOut && alloc.has(i))) {
         alloc.set(i, (alloc.get(i) || 0) + p);
         left[i] -= p;
         money -= p;
       }
     }
-    // Then spread what's left as part-contributions
-    for (const i of shuffle([...indexes])) {
+    // Then spread what's left as part-contributions. Gifts not yet chosen come first,
+    // so the amount is shared out rather than piled onto one gift.
+    const fresh = byPriority(indexes.filter(i => !alloc.has(i)));
+    const chosen = byPriority(indexes.filter(i => alloc.has(i)));
+    for (const i of [...fresh, ...chosen]) {
       if (money <= 0) break;
       const take = Math.min(money, left[i]);
       if (take > 0) {
@@ -434,7 +447,8 @@ function buildSet(target, excludeKey) {
     found.set(key, { alloc, sum: goal, key });
   }
   const list = [...found.values()];
-  if (!list.length) return null;
+  // If the spread-out rule can't be met (e.g. very few gifts are left), fall back to any split.
+  if (!list.length) return spreadOut ? buildSet(target, excludeKey, false) : null;
   return list[Math.floor(Math.random() * list.length)];
 }
 
