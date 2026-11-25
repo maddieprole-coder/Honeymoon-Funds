@@ -34,65 +34,55 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
 
   /* Hero */
   .hero {
-    position: relative;
-    overflow: hidden;
     background:
       radial-gradient(120% 90% at 85% 0%, rgba(201,138,58,.55) 0%, transparent 55%),
       linear-gradient(160deg, var(--ember-deep) 0%, var(--ember) 55%, #6b2a14 100%);
     color: #fbf1df;
     text-align: center;
-    padding: 130px 28px 150px;
+    padding: 110px 28px 150px;
   }
-  .hero::after {
-    content: "";
-    position: absolute;
-    left: 50%; bottom: -1px;
-    width: 1px; height: 80px;
-    background: linear-gradient(to bottom, rgba(251,241,223,.7), transparent);
-  }
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    opacity: .85;
-    margin-bottom: 26px;
-    font-weight: 400;
-  }
+  .eyebrow { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; opacity: .85; margin-bottom: 22px; font-weight: 400; }
   .hero h1 {
     font-family: var(--serif);
     font-weight: 400;
     font-size: clamp(48px, 8vw, 84px);
     line-height: 1.02;
-    margin: 0 0 26px;
+    margin: 0 0 24px;
     letter-spacing: -0.5px;
   }
   .hero h1 em { font-style: italic; color: #f4c27a; }
-  .hero .intro {
-    max-width: 520px;
-    margin: 0 auto;
-    font-size: 18px;
-    opacity: .9;
+  .hero .intro { max-width: 520px; margin: 0 auto; font-size: 18px; opacity: .9; }
+
+  /* Two-column layout: amount on the left, suggestions on the right */
+  .split {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: -90px;
+    position: relative;
+    z-index: 1;
   }
 
-  /* Contribution panel, lifted over the hero */
-  .panel-wrap { margin-top: -90px; position: relative; z-index: 1; }
   .panel {
+    position: sticky;
+    top: 24px;
     background: var(--paper);
     border-radius: 22px;
-    padding: 40px 36px;
+    padding: 36px 32px;
     box-shadow: 0 30px 60px -20px rgba(60,30,10,.35), 0 0 0 1px rgba(201,138,58,.15);
     text-align: center;
   }
   .panel .question {
     font-family: var(--serif);
     font-style: italic;
-    font-size: 22px;
+    font-size: 19px;
     color: var(--muted);
-    margin: 0 0 18px;
+    margin: 0 0 14px;
   }
   .amount-field {
     display: inline-flex;
@@ -101,13 +91,14 @@
     gap: 6px;
     border-bottom: 1px solid var(--line);
     padding: 0 6px 6px;
-    margin-bottom: 26px;
+    margin-bottom: 24px;
   }
-  .amount-field .pound { font-family: var(--serif); font-size: 36px; color: var(--muted); }
+  .amount-field:focus-within { border-bottom-color: var(--ember); }
+  .amount-field .pound { font-family: var(--serif); font-size: 32px; color: var(--muted); }
   input {
     font-family: var(--serif);
-    font-size: 56px;
-    width: 180px;
+    font-size: 52px;
+    width: 160px;
     border: none;
     background: transparent;
     color: var(--ink);
@@ -115,16 +106,15 @@
     padding: 0;
   }
   input:focus { outline: none; }
-  .amount-field:focus-within { border-bottom-color: var(--ember); }
 
-  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .actions { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
   button {
     font-family: var(--sans);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 15px 28px;
+    padding: 14px 22px;
     border-radius: 999px;
     border: 1px solid var(--ember);
     background: var(--ember);
@@ -136,39 +126,27 @@
   button.ghost { background: transparent; color: var(--ember); }
   button.ghost:hover { background: var(--ember); color: #fff; }
 
-  .summary { text-align: center; margin: 44px 0 0; }
-  .total {
-    font-family: var(--serif);
-    font-size: 30px;
-    color: var(--ink);
-  }
+  .summary { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .total { font-family: var(--serif); font-size: 26px; color: var(--ink); min-height: 1.4em; }
   .total span { color: var(--ember); font-style: italic; }
-  .msg { min-height: 1.6em; color: var(--ember); font-size: 15px; margin: 8px 0 14px; }
-  .pay-btn { min-width: 220px; }
+  .msg { min-height: 1.5em; color: var(--ember); font-size: 14px; margin: 8px 0 12px; }
 
-  /* Section headings */
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 110px 0 36px;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 14px;
-  }
-  .section-head h2 {
+  /* Results */
+  .results { min-height: 320px; }
+  .empty {
     font-family: var(--serif);
-    font-weight: 400;
-    font-size: 34px;
-    margin: 0;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--muted);
+    text-align: center;
+    padding: 120px 20px;
+    border: 1px dashed var(--line);
+    border-radius: 22px;
   }
-  .section-head p { margin: 0; color: var(--muted); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
-
-  /* Suggested cards */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 22px;
   }
   .card {
     background: var(--paper);
@@ -179,22 +157,32 @@
     animation: fade-up .6s ease both;
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 22px 44px -18px rgba(70,40,15,.45); }
-  .thumb {
-    height: 150px;
-    background: linear-gradient(150deg, #e9c899 0%, #c98a3a 45%, #a94a24 100%);
-  }
-  .card img { width: 100%; height: 150px; object-fit: cover; display: block; }
-  .card .body { padding: 20px 22px 22px; }
-  .card strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 19px; line-height: 1.35; }
-  .card .price { display: block; font-family: var(--serif); font-style: italic; color: var(--ember); font-size: 26px; margin-top: 10px; }
-  .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+  .thumb { height: 120px; background: linear-gradient(150deg, #e9c899 0%, #c98a3a 45%, #a94a24 100%); }
+  .card img { width: 100%; height: 120px; object-fit: cover; display: block; }
+  .card .body { padding: 18px 20px 20px; }
+  .card strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 17px; line-height: 1.35; }
+  .card .price { display: block; font-family: var(--serif); font-style: italic; color: var(--ember); font-size: 24px; margin-top: 8px; }
+  .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Progress list */
-  .cat { margin-top: 56px; }
+  /* Section heading and progress list */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 110px 0 36px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+  }
+  .section-head h2 { font-family: var(--serif); font-weight: 400; font-size: 34px; margin: 0; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .cat { margin-top: 48px; }
+  .cat:first-child { margin-top: 0; }
   .cat h3 {
     font-weight: 400;
     font-size: 12px;
@@ -225,10 +213,13 @@
     padding: 110px 0 60px;
   }
 
+  @media (max-width: 900px) {
+    .split { grid-template-columns: 1fr; gap: 32px; margin-top: -70px; }
+    .panel { position: static; }
+  }
   @media (max-width: 600px) {
     .hero { padding: 90px 22px 120px; }
-    .panel { padding: 30px 22px; }
-    input { font-size: 46px; width: 150px; }
+    input { font-size: 44px; width: 140px; }
     .section-head { flex-direction: column; align-items: flex-start; }
   }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
@@ -244,8 +235,9 @@
 
 <div class="wrap">
 
-  <div class="panel-wrap">
-    <div class="panel">
+  <div class="split">
+
+    <aside class="panel">
       <p class="question">How much would you like to give?</p>
       <div class="amount-field">
         <span class="pound">&pound;</span>
@@ -258,16 +250,16 @@
       <div class="summary">
         <div class="total" id="total"></div>
         <div class="msg" id="msg"></div>
-        <button class="pay-btn" id="pay">Pay</button>
+        <button id="pay">Pay</button>
       </div>
-    </div>
-  </div>
+    </aside>
 
-  <div class="section-head" id="picks-head" style="display:none">
-    <h2>Your selection</h2>
-    <p>Funded by you</p>
+    <section class="results">
+      <div class="empty" id="empty">Your suggested experiences will appear here.</div>
+      <div class="grid" id="picks"></div>
+    </section>
+
   </div>
-  <div class="grid" id="picks"></div>
 
   <div class="section-head">
     <h2>Every experience</h2>
@@ -363,7 +355,7 @@ let current = null;
 function render() {
   const grid = $("picks");
   grid.innerHTML = "";
-  $("picks-head").style.display = current ? "flex" : "none";
+  $("empty").style.display = current ? "none" : "block";
   if (!current) { $("total").textContent = ""; return; }
 
   const groups = new Map();
