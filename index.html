@@ -372,19 +372,17 @@ const EXPERIENCES = [
 ];
 
 // ---- Settings ----
-const TOLERANCE = 15;              // how far over the guest's amount a suggested set may go (£)
-const FUNDED_IDS = [];             // filled in from the sheet once the backend is connected
 const CHECKOUT_ENDPOINT = "";      // Apps Script web app URL, added when the backend is ready
-
-// ---- Expand each experience into individual units (one per gift) ----
-const units = [];
-EXPERIENCES.forEach((e, i) => {
-  for (let q = 0; q < e.qty; q++) units.push({ id: i + "-" + q, exp: i, price: e.price });
-});
-const funded = new Set(FUNDED_IDS);
+// Money already given towards each experience, keyed by its index in EXPERIENCES (£).
+// Filled in from the sheet once the backend is connected.
+const FUNDED = {};
 
 const $ = id => document.getElementById(id);
 const money = n => "£" + n.toLocaleString("en-GB");
+
+function remainingFor(i) {
+  return EXPERIENCES[i].price * EXPERIENCES[i].qty - (FUNDED[i] || 0);
+}
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -394,26 +392,50 @@ function shuffle(arr) {
   return arr;
 }
 
-// Builds several random sets of open units that fit the amount, and picks one of the closest.
-// excludeKey stops Shuffle from returning the same set again.
+// Splits the guest's amount across experiences. Whole gifts are taken first, and whatever
+// is left over becomes a part-contribution to another gift, so the full amount is always used.
+// Returns { alloc: Map(expIndex -> £), sum, key }. excludeKey stops Shuffle repeating a set.
 function buildSet(target, excludeKey) {
-  const open = units.filter(u => !funded.has(u.id));
+  const indexes = EXPERIENCES.map((_, i) => i).filter(i => remainingFor(i) > 0);
+  const totalLeft = indexes.reduce((s, i) => s + remainingFor(i), 0);
+  const goal = Math.min(target, totalLeft);
+  if (goal <= 0) return null;
+
   const found = new Map();
-  for (let t = 0; t < 400; t++) {
-    const pick = [];
-    let sum = 0;
-    for (const u of shuffle([...open])) {
-      if (sum + u.price <= target + TOLERANCE) { pick.push(u); sum += u.price; }
+  for (let t = 0; t < 300; t++) {
+    const left = {};
+    indexes.forEach(i => { left[i] = remainingFor(i); });
+    const alloc = new Map();
+    let money = goal;
+
+    // Whole gifts first, in random order
+    for (const i of shuffle([...indexes])) {
+      const p = EXPERIENCES[i].price;
+      while (money >= p && left[i] >= p) {
+        alloc.set(i, (alloc.get(i) || 0) + p);
+        left[i] -= p;
+        money -= p;
+      }
     }
-    if (!pick.length) continue;
-    const key = pick.map(u => u.id).sort().join(",");
+    // Then spread what's left as part-contributions
+    for (const i of shuffle([...indexes])) {
+      if (money <= 0) break;
+      const take = Math.min(money, left[i]);
+      if (take > 0) {
+        alloc.set(i, (alloc.get(i) || 0) + take);
+        left[i] -= take;
+        money -= take;
+      }
+    }
+    if (money > 0) continue;
+
+    const key = [...alloc.entries()].sort((a, b) => a[0] - b[0]).map(([i, a]) => i + ":" + a).join(",");
     if (key === excludeKey || found.has(key)) continue;
-    found.set(key, { pick, sum, key });
+    found.set(key, { alloc, sum: goal, key });
   }
-  const list = [...found.values()].sort((a, b) => Math.abs(a.sum - target) - Math.abs(b.sum - target));
+  const list = [...found.values()];
   if (!list.length) return null;
-  const top = list.slice(0, 5);
-  return top[Math.floor(Math.random() * top.length)];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 let current = null;
@@ -424,14 +446,12 @@ function render() {
   $("empty").style.display = current ? "none" : "block";
   if (!current) { $("total").textContent = ""; return; }
 
-  const groups = new Map();
-  for (const u of current.pick) {
-    if (!groups.has(u.exp)) groups.set(u.exp, []);
-    groups.get(u.exp).push(u);
-  }
   let delay = 0;
-  for (const [exp, us] of groups) {
-    const e = EXPERIENCES[exp];
+  for (const [i, amt] of current.alloc) {
+    const e = EXPERIENCES[i];
+    const whole = amt % e.price === 0;
+    const count = amt / e.price;
+
     const card = document.createElement("div");
     card.className = "card";
     card.style.animationDelay = (delay++ * 60) + "ms";
@@ -451,16 +471,19 @@ function render() {
     const body = document.createElement("div");
     body.className = "body";
     const title = document.createElement("strong");
-    title.textContent = e.name + (us.length > 1 ? " ×" + us.length : "");
+    title.textContent = whole
+      ? e.name + (count > 1 ? " ×" + count : "")
+      : "Towards: " + e.name;
     const price = document.createElement("span");
     price.className = "price";
-    price.textContent = money(us.length * e.price);
+    price.textContent = money(amt);
     const cat = document.createElement("small");
     cat.textContent = e.category;
     body.append(title, price, cat);
     card.appendChild(body);
     grid.appendChild(card);
   }
+
   const totalEl = $("total");
   totalEl.textContent = "";
   const label = document.createTextNode("Your total ");
@@ -481,17 +504,18 @@ function renderProgress() {
     sec.appendChild(h);
     EXPERIENCES.forEach((e, i) => {
       if (e.category !== cat) return;
-      const done = units.filter(u => u.exp === i && funded.has(u.id)).length;
-      const pct = Math.round(done / e.qty * 100);
+      const totalCost = e.price * e.qty;
+      const got = FUNDED[i] || 0;
+      const pct = Math.min(100, Math.round(got / totalCost * 100));
       const row = document.createElement("div");
       row.className = "row";
       const name = document.createElement("strong");
       name.textContent = e.name;
       const price = document.createElement("span");
       price.className = "price";
-      price.textContent = money(e.price);
+      price.textContent = money(e.price) + " each";
       const left = document.createElement("small");
-      left.textContent = (e.qty - done) + " of " + e.qty + " left";
+      left.textContent = money(totalCost - got) + " still needed";
       const bar = document.createElement("div");
       bar.className = "bar";
       const fill = document.createElement("span");
@@ -509,7 +533,7 @@ $("suggest").onclick = () => {
   const next = buildSet(target, null);
   if (!next) {
     current = null;
-    $("msg").textContent = "No combination fits that amount. Try a different amount.";
+    $("msg").textContent = "Everything is already funded. Thank you!";
   } else {
     current = next;
     $("msg").textContent = "";
@@ -532,11 +556,12 @@ $("pay").onclick = async () => {
   const name = $("name").value.trim();
   if (!name) { $("msg").textContent = "Please add your name so we know who to thank."; $("name").focus(); return; }
   if (!CHECKOUT_ENDPOINT) { $("msg").textContent = "Payments aren't connected yet."; return; }
+  const allocation = [...current.alloc].map(([exp, amount]) => ({ exp, amount }));
   try {
     const res = await fetch(CHECKOUT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ name, unitIds: current.pick.map(u => u.id), total: current.sum })
+      body: JSON.stringify({ name, allocation, total: current.sum })
     });
     const data = await res.json();
     if (data.url) window.location = data.url;
