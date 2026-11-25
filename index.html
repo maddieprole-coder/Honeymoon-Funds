@@ -155,6 +155,28 @@
   .summary { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
   .total { font-family: var(--serif); font-size: 26px; color: var(--ink); min-height: 1.4em; }
   .total span { color: var(--ember); font-style: italic; }
+  .fee-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+    margin: 0 0 18px;
+    cursor: pointer;
+  }
+  .fee-option input {
+    width: 18px;
+    height: 18px;
+    margin: 3px 0 0;
+    padding: 0;
+    font-size: 0;
+    border: initial;
+    background: initial;
+    accent-color: var(--ember);
+    flex-shrink: 0;
+  }
   .msg { min-height: 1.5em; color: var(--ember); font-size: 14px; margin: 8px 0 12px; }
 
   /* Results */
@@ -310,6 +332,10 @@
       <div class="summary">
         <div class="total" id="total"></div>
         <div class="msg" id="msg"></div>
+        <label class="fee-option">
+          <input type="checkbox" id="coverFees">
+          <span id="feeText"></span>
+        </label>
         <button id="pay">Pay</button>
       </div>
     </aside>
@@ -493,6 +519,10 @@ function render() {
   $("empty").style.display = current ? "none" : "block";
   if (!current) { $("total").textContent = ""; return; }
 
+  // Standard UK card fee (1.5% + 20p), shown as an optional extra the guest can choose to add.
+  const fee = Math.round((current.sum * 0.015 + 0.2) * 100) / 100;
+  $("feeText").textContent = "Help us receive 100% of your gift: add " + money(fee) + " to cover the card fee (1.5% + 20p)? Totally optional, and so kind if you can.";
+
   let delay = 0;
   for (const [i, amt] of current.alloc) {
     const e = EXPERIENCES[i];
@@ -608,7 +638,7 @@ $("pay").onclick = async () => {
     const res = await fetch(CHECKOUT_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ name, message: $("message").value.trim(), allocation, total: current.sum })
+      body: JSON.stringify({ name, message: $("message").value.trim(), allocation, total: current.sum, coverFees: $("coverFees").checked })
     });
     const data = await res.json();
     if (data.url) window.location = data.url;
