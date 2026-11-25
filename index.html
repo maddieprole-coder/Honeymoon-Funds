@@ -163,6 +163,8 @@
   .card strong { display: block; font-family: var(--serif); font-weight: 400; font-size: 17px; line-height: 1.35; }
   .card .price { display: block; font-family: var(--serif); font-style: italic; color: var(--ember); font-size: 24px; margin-top: 8px; }
   .card small { display: block; color: var(--muted); margin-top: 6px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+  .credit { display: block; margin-top: 10px; font-size: 10px; letter-spacing: .5px; color: var(--muted); text-decoration: none; }
+  .credit:hover { color: var(--ember); }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -338,6 +340,65 @@ const TOLERANCE = 15;              // how far over the guest's amount a suggeste
 const FUNDED_IDS = [];             // filled in from the sheet once the backend is connected
 const CHECKOUT_ENDPOINT = "";      // Apps Script web app URL, added when the backend is ready
 
+// ---- Photos (Unsplash) ----
+// One search term per experience, in the same order as EXPERIENCES above.
+const PHOTO_TERMS = [
+  "tropical resort villa", "Okinawa beach snorkelling", "Japanese onsen ryokan", "Osaka skyline night",
+  "Tokyo hotel room", "Tokyo skyline night", "Kyoto ryokan", "Hiroshima city",
+  "business class airplane seat", "airplane window clouds", "airplane wing sunset", "Shinkansen bullet train",
+  "Shinkansen train Japan", "Hakone mountains Japan", "Japan train station", "theme park rollercoaster",
+  "go-karts track", "theme park fireworks night", "theme park castle", "amusement park rides",
+  "kaiseki Japanese dinner", "Japanese arcade games", "digital art light installation", "Japanese cafe dessert",
+  "Miyajima torii gate", "Japanese museum exhibition", "Shibuya crossing night", "karaoke bowling arcade"
+];
+const UNSPLASH_KEY = "XebReS10eQGD3bS3YcMIjfsQKmFyXQ1ieeJlBEhlQ_c";
+let photoCache = {};
+try { photoCache = JSON.parse(localStorage.getItem("honeymoonPhotos") || "{}"); } catch (err) { photoCache = {}; }
+
+// Caches results so each term is only requested once (keeps us within Unsplash's hourly limit).
+async function fetchPhoto(term) {
+  if (photoCache[term]) return photoCache[term];
+  const res = await fetch("https://api.unsplash.com/search/photos?per_page=1&orientation=landscape&query=" + encodeURIComponent(term), {
+    headers: { Authorization: "Client-ID " + UNSPLASH_KEY }
+  });
+  if (!res.ok) throw new Error("Unsplash " + res.status);
+  const data = await res.json();
+  const p = data.results && data.results[0];
+  if (!p) throw new Error("No photo found");
+  const photo = {
+    url: p.urls.regular,
+    name: p.user.name,
+    link: p.user.links.html + "?utm_source=honeymoon&utm_medium=referral",
+    download: p.links.download_location
+  };
+  photoCache[term] = photo;
+  try { localStorage.setItem("honeymoonPhotos", JSON.stringify(photoCache)); } catch (err) {}
+  return photo;
+}
+
+// Swaps the card's placeholder for a photo and adds the photographer credit.
+// If the photo can't load, the placeholder stays.
+function attachPhoto(card, expIdx) {
+  fetchPhoto(PHOTO_TERMS[expIdx]).then(photo => {
+    const img = document.createElement("img");
+    img.src = photo.url;
+    img.alt = EXPERIENCES[expIdx].name;
+    img.loading = "lazy";
+    card.querySelector(".thumb").replaceWith(img);
+
+    const credit = document.createElement("a");
+    credit.className = "credit";
+    credit.href = photo.link;
+    credit.target = "_blank";
+    credit.rel = "noopener";
+    credit.textContent = "Photo: " + photo.name + " / Unsplash";
+    card.querySelector(".body").appendChild(credit);
+
+    // Unsplash guidelines ask us to report each photo that is shown.
+    fetch(photo.download, { headers: { Authorization: "Client-ID " + UNSPLASH_KEY } }).catch(() => {});
+  }).catch(() => {});
+}
+
 // ---- Expand each experience into individual units (one per gift) ----
 const units = [];
 EXPERIENCES.forEach((e, i) => {
@@ -406,6 +467,7 @@ function render() {
       const thumb = document.createElement("div");
       thumb.className = "thumb";
       card.appendChild(thumb);
+      attachPhoto(card, exp);
     }
     const body = document.createElement("div");
     body.className = "body";
