@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our Honeymoon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
+
+  :root {
+    --char: #120c09;
+    --smoke: #2a1a13;
+    --cream: #f4e6cf;
+    --muted: #b9a58a;
+    --ember: #e8642c;
+    --amber: #f2a33a;
+    --gold: #d9a441;
+    --rust: #8f3b1b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    color: var(--cream);
+    margin: 0;
+    padding: 40px 24px 64px;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 50% 110%, rgba(232,100,44,.55) 0%, rgba(143,59,27,.25) 35%, transparent 65%),
+      linear-gradient(180deg, #0a0605 0%, var(--char) 45%, var(--smoke) 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+
+  /* Drifting embers */
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    left: 0; right: 0; bottom: -10%;
+    height: 60vh;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(242,163,58,.7) 0 1px, transparent 2px),
+      radial-gradient(circle at 60% 70%, rgba(232,100,44,.8) 0 1.5px, transparent 2.5px),
+      radial-gradient(circle at 80% 90%, rgba(242,163,58,.6) 0 1px, transparent 2px),
+      radial-gradient(circle at 40% 85%, rgba(232,100,44,.7) 0 1px, transparent 2px);
+    animation: rise 9s linear infinite;
+    opacity: .7;
+  }
+  body::after { animation-duration: 13s; animation-delay: -5s; opacity: .45; }
+
+  @keyframes rise {
+    0%   { transform: translateY(0); opacity: 0; }
+    15%  { opacity: .8; }
+    100% { transform: translateY(-60vh); opacity: 0; }
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 44px;
+    letter-spacing: 8px;
+    margin: 0 0 12px;
+    background: linear-gradient(180deg, #fff1d6 0%, var(--amber) 55%, var(--ember) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 18px rgba(232,100,44,.45));
+    animation: flicker 4s ease-in-out infinite;
+  }
+
+  @keyframes flicker {
+    0%, 100% { filter: drop-shadow(0 0 18px rgba(232,100,44,.45)); }
+    50%      { filter: drop-shadow(0 0 26px rgba(242,163,58,.6)); }
+  }
+
+  .intro {
+    text-align: center;
+    max-width: 580px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .panel {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 28px;
+    border-radius: 18px;
+    background: rgba(18,12,9,.6);
+    border: 1px solid rgba(242,163,58,.25);
+    box-shadow: 0 0 40px rgba(232,100,44,.12), inset 0 0 30px rgba(0,0,0,.4);
+    backdrop-filter: blur(6px);
+  }
+
+  label { color: var(--muted); letter-spacing: 1px; }
+
+  input {
+    font-family: inherit;
+    font-size: 22px;
+    padding: 10px 14px;
+    width: 150px;
+    text-align: center;
+    color: var(--amber);
+    background: rgba(0,0,0,.35);
+    border: 1px solid rgba(242,163,58,.35);
+    border-radius: 10px;
+    outline: none;
+    transition: box-shadow .3s, border-color .3s;
+  }
+  input:focus { border-color: var(--amber); box-shadow: 0 0 18px rgba(242,163,58,.35); }
+
+  button {
+    font-family: inherit;
+    font-size: 17px;
+    letter-spacing: 1px;
+    padding: 11px 22px;
+    margin: 6px 4px;
+    color: #1a0f08;
+    background: linear-gradient(135deg, var(--amber), var(--ember));
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(232,100,44,.35);
+    transition: transform .2s, box-shadow .2s, filter .2s;
+  }
+  button:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(242,163,58,.5); filter: brightness(1.05); }
+  button:active { transform: translateY(0); }
+  button.secondary {
+    background: transparent;
+    color: var(--amber);
+    border: 1px solid rgba(242,163,58,.6);
+    box-shadow: none;
+  }
+  button.secondary:hover { background: rgba(242,163,58,.1); box-shadow: 0 0 18px rgba(242,163,58,.25); }
+
+  .total {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    color: var(--amber);
+    margin: 18px 0 6px;
+    text-shadow: 0 0 14px rgba(242,163,58,.35);
+  }
+  .msg { min-height: 1.3em; color: #ff9a6b; font-style: italic; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 18px;
+    max-width: 960px;
+    margin: 32px auto;
+  }
+
+  .card {
+    position: relative;
+    background: linear-gradient(160deg, rgba(58,32,20,.85), rgba(22,14,10,.9));
+    border: 1px solid rgba(242,163,58,.22);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+    animation: rise-in .6s ease both;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(242,163,58,.6);
+    box-shadow: 0 14px 34px rgba(0,0,0,.55), 0 0 24px rgba(232,100,44,.25);
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card img { width: 100%; border-radius: 10px; margin-bottom: 12px; }
+  .card strong { font-weight: 700; font-size: 17px; line-height: 1.3; display: block; color: var(--cream); }
+  .card .price { color: var(--amber); font-size: 22px; margin-top: 8px; text-shadow: 0 0 10px rgba(242,163,58,.3); }
+  .card small { display: block; color: var(--muted); margin-top: 6px; letter-spacing: .5px; }
+
+  .progress-list { max-width: 960px; margin: 48px auto; }
+  .cat h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 36px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(90deg, var(--ember), transparent) 1;
+  }
+
+  .progress-list .card { animation: none; padding: 14px 18px; }
+  .progress-list .card strong { display: inline; font-size: 16px; }
+  .progress-list .card .price { display: inline; font-size: 16px; margin: 0; }
+  .progress-list .card small { display: inline; margin-left: 8px; }
+
+  .bar {
+    height: 6px;
+    background: rgba(0,0,0,.45);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 10px;
+    box-shadow: inset 0 0 4px rgba(0,0,0,.6);
+  }
+  .bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--rust), var(--ember), var(--amber));
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(242,163,58,.6);
+    transition: width .6s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, body::before, body::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1>OUR HONEYMOON</h1>
+<p class="intro">Help us make our trip to Japan unforgettable. Enter the amount you'd like to give, and we'll suggest a set of experiences to fund. Shuffle for a different set.</p>
+
+<div class="panel">
+  <label>Your contribution £ <input id="amount" type="number" min="10" step="1" value="250"></label>
+  <div>
+    <button id="suggest">Suggest experiences</button>
+    <button class="secondary" id="shuffle">Shuffle</button>
+  </div>
+  <div class="total" id="total"></div>
+  <div class="msg" id="msg"></div>
+  <button id="pay">Pay</button>
+</div>
+
+<div class="grid" id="picks"></div>
+
+<div class="progress-list" id="categories"></div>
+
+<script>
+// ---- Experiences (one entry per gift type) ----
+// Add an `image` URL to any entry to show a photo on its card, e.g. image: "photos/hakone.jpg"
+const EXPERIENCES = [
+  { category: "Okinawa, Club Med", name: "A night at Club Med (half each)", price: 100, qty: 10 },
+  { category: "Okinawa, Club Med", name: "A beach and snorkelling day at Club Med", price: 100, qty: 10 },
+  { category: "Hotels", name: "A third of a night in our private-onsen room in Hakone", price: 118, qty: 6 },
+  { category: "Hotels", name: "Half a night high above Osaka", price: 105, qty: 4 },
+  { category: "Hotels", name: "A night in Tokyo", price: 145, qty: 5 },
+  { category: "Hotels", name: "A night in Tokyo with a view", price: 150, qty: 3 },
+  { category: "Hotels", name: "A night in Kyoto", price: 105, qty: 2 },
+  { category: "Hotels", name: "A night in Hiroshima", price: 100, qty: 2 },
+  { category: "Getting to Japan", name: "Towards our business class seats (taxes and fees)", price: 102, qty: 10 },
+  { category: "Flights and trains in Japan", name: "Half a flight to Okinawa", price: 113, qty: 4 },
+  { category: "Flights and trains in Japan", name: "Half a flight back to Tokyo", price: 113, qty: 4 },
+  { category: "Flights and trains in Japan", name: "Bullet train to Kyoto", price: 120, qty: 1 },
+  { category: "Flights and trains in Japan", name: "Bullet train to Hiroshima", price: 100, qty: 1 },
+  { category: "Flights and trains in Japan", name: "Hakone travel pass", price: 80, qty: 1 },
+  { category: "Flights and trains in Japan", name: "Airport trains there and back", price: 60, qty: 1 },
+  { category: "Days out", name: "Universal Express Pass", price: 150, qty: 1 },
+  { category: "Days out", name: "Mario Kart go-karts for two", price: 140, qty: 1 },
+  { category: "Days out", name: "A day at Tokyo Disneyland for two", price: 120, qty: 1 },
+  { category: "Days out", name: "A day at DisneySea for two", price: 120, qty: 1 },
+  { category: "Days out", name: "Universal Studios tickets for two", price: 120, qty: 1 },
+  { category: "Days out", name: "A seat at the kaiseki dinner in Kyoto", price: 100, qty: 2 },
+  { category: "Days out", name: "An afternoon at PokéPark Kanto for two", price: 80, qty: 1 },
+  { category: "Days out", name: "teamLab Planets", price: 40, qty: 1 },
+  { category: "Days out", name: "Lunch at the Pokémon Cafe", price: 40, qty: 1 },
+  { category: "Days out", name: "A day on Miyajima Island", price: 40, qty: 1 },
+  { category: "Days out", name: "Nintendo Museum tickets for two", price: 35, qty: 1 },
+  { category: "Days out", name: "Shibuya Sky at sunset", price: 35, qty: 1 },
+  { category: "Days out", name: "A night out at Round1", price: 30, qty: 1 }
+];
+
+// ---- Settings ----
+const TOLERANCE = 15;              // how far over the guest's amount a suggested set may go (£)
+const FUNDED_IDS = [];             // filled in from the sheet once the backend is connected
+const CHECKOUT_ENDPOINT = "";      // Apps Script web app URL, added when the backend is ready
+
+// ---- Expand each experience into individual units (one per gift) ----
+const units = [];
+EXPERIENCES.forEach((e, i) => {
+  for (let q = 0; q < e.qty; q++) units.push({ id: i + "-" + q, exp: i, price: e.price });
+});
+const funded = new Set(FUNDED_IDS);
+
+const $ = id => document.getElementById(id);
+const money = n => "£" + n.toLocaleString("en-GB");
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Builds several random sets of open units that fit the amount, and picks one of the closest.
+// excludeKey stops Shuffle from returning the same set again.
+function buildSet(target, excludeKey) {
+  const open = units.filter(u => !funded.has(u.id));
+  const found = new Map();
+  for (let t = 0; t < 400; t++) {
+    const pick = [];
+    let sum = 0;
+    for (const u of shuffle([...open])) {
+      if (sum + u.price <= target + TOLERANCE) { pick.push(u); sum += u.price; }
+    }
+    if (!pick.length) continue;
+    const key = pick.map(u => u.id).sort().join(",");
+    if (key === excludeKey || found.has(key)) continue;
+    found.set(key, { pick, sum, key });
+  }
+  const list = [...found.values()].sort((a, b) => Math.abs(a.sum - target) - Math.abs(b.sum - target));
+  if (!list.length) return null;
+  const top = list.slice(0, 5);
+  return top[Math.floor(Math.random() * top.length)];
+}
+
+let current = null;
+
+function render() {
+  const grid = $("picks");
+  grid.innerHTML = "";
+  if (!current) { $("total").textContent = ""; return; }
+
+  const groups = new Map();
+  for (const u of current.pick) {
+    if (!groups.has(u.exp)) groups.set(u.exp, []);
+    groups.get(u.exp).push(u);
+  }
+  for (const [exp, us] of groups) {
+    const e = EXPERIENCES[exp];
+    const card = document.createElement("div");
+    card.className = "card";
+    if (e.image) {
+      const img = document.createElement("img");
+      img.src = e.image;
+      img.alt = e.name;
+      card.appendChild(img);
+    }
+    const title = document.createElement("strong");
+    title.textContent = e.name + (us.length > 1 ? " ×" + us.length : "");
+    const price = document.createElement("div");
+    price.className = "price";
+    price.textContent = money(us.length * e.price);
+    const cat = document.createElement("small");
+    cat.textContent = e.category;
+    card.append(title, price, cat);
+    grid.appendChild(card);
+  }
+  $("total").textContent = "Your total: " + money(current.sum);
+}
+
+function renderProgress() {
+  const root = $("categories");
+  root.innerHTML = "";
+  const cats = [...new Set(EXPERIENCES.map(e => e.category))];
+  cats.forEach(cat => {
+    const sec = document.createElement("div");
+    sec.className = "cat";
+    const h = document.createElement("h3");
+    h.textContent = cat;
+    sec.appendChild(h);
+    EXPERIENCES.forEach((e, i) => {
+      if (e.category !== cat) return;
+      const done = units.filter(u => u.exp === i && funded.has(u.id)).length;
+      const pct = Math.round(done / e.qty * 100);
+      const row = document.createElement("div");
+      row.className = "card";
+      row.style.margin = "8px 0";
+      const name = document.createElement("strong");
+      name.textContent = e.name;
+      const price = document.createElement("span");
+      price.className = "price";
+      price.textContent = " " + money(e.price);
+      const left = document.createElement("small");
+      left.textContent = (e.qty - done) + " of " + e.qty + " left";
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      const fill = document.createElement("span");
+      fill.style.width = pct + "%";
+      bar.appendChild(fill);
+      row.append(name, price, left, bar);
+      sec.appendChild(row);
+    });
+    root.appendChild(sec);
+  });
+}
+
+$("suggest").onclick = () => {
+  const target = Number($("amount").value);
+  const next = buildSet(target, null);
+  if (!next) {
+    current = null;
+    $("msg").textContent = "No combination fits that amount. Try a different amount.";
+  } else {
+    current = next;
+    $("msg").textContent = "";
+  }
+  render();
+};
+
+$("shuffle").onclick = () => {
+  if (!current) { $("msg").textContent = "Suggest experiences first."; return; }
+  const target = Number($("amount").value);
+  const next = buildSet(target, current.key);
+  if (!next) { $("msg").textContent = "No other combinations for that amount."; return; }
+  current = next;
+  $("msg").textContent = "";
+  render();
+};
+
+$("pay").onclick = async () => {
+  if (!current) { $("msg").textContent = "Suggest experiences first."; return; }
+  if (!CHECKOUT_ENDPOINT) { $("msg").textContent = "Payments aren't connected yet."; return; }
+  try {
+    const res = await fetch(CHECKOUT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ unitIds: current.pick.map(u => u.id), total: current.sum })
+    });
+    const data = await res.json();
+    if (data.url) window.location = data.url;
+    else $("msg").textContent = data.error || "Something went wrong. Please try again.";
+  } catch (err) {
+    $("msg").textContent = "Couldn't reach the payment service. Please try again.";
+  }
+};
+
+renderProgress();
+render();
+</script>
+</body>
+</html>
